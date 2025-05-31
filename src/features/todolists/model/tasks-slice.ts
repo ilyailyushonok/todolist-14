@@ -69,9 +69,17 @@ export const tasksSlice = createAppSlice({
       },
     ),
     changeTaskStatusTC: create.asyncThunk(
-      async (args: { todolistId: string; taskId: string; model: UpdateTaskModel }, thunkAPI) => {
+      async (args: DomainTask, thunkAPI) => {
         try {
-          const res = await tasksApi.updateTask(args)
+          const model: UpdateTaskModel = {
+            status: args.status,
+            description: args.description,
+            title: args.title,
+            priority: args.priority,
+            startDate: args.startDate,
+            deadline: args.deadline,
+          }
+          const res = await tasksApi.updateTask({ taskId:args.id,todolistId:args.todoListId, model })
           return res.data.data.item
         } catch (error) {
           return thunkAPI.rejectWithValue(null)
@@ -87,9 +95,17 @@ export const tasksSlice = createAppSlice({
       },
     ),
     changeTaskTitleTC: create.asyncThunk(
-      async (args:{ todolistId: string, taskId: string, model:UpdateTaskModel}, thunkAPI) => {
+      async (args: DomainTask, thunkAPI) => {
         try {
-          const res = await tasksApi.updateTask(args)
+          const model: UpdateTaskModel = {
+            status: args.status,
+            description: args.description,
+            title: args.title,
+            priority: args.priority,
+            startDate: args.startDate,
+            deadline: args.deadline,
+          }
+          const res = await tasksApi.updateTask({ taskId:args.id,todolistId:args.todoListId, model })
           return res.data.data.item
         } catch (error) {
           return thunkAPI.rejectWithValue(null)
