@@ -2,6 +2,7 @@ import { createTodolistTC, deleteTodolistTC } from "./todolists-slice"
 import { createAppSlice } from "@/common/utils"
 import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
 import { DomainTask, UpdateTaskModel } from "@/features/todolists/api/tasksApi.types.ts"
+import { changeStatusLoaderAC } from "@/app/app-slice.ts"
 
 export const tasksSlice = createAppSlice({
   name: "tasks",
@@ -21,8 +22,10 @@ export const tasksSlice = createAppSlice({
   reducers: (create) => ({
     fetchTasksTC: create.asyncThunk(
       async (todolistId: string, thunkAPI) => {
+        thunkAPI.dispatch(changeStatusLoaderAC({status:"loading"}))
         try {
           const res = await tasksApi.getTasks(todolistId)
+          thunkAPI.dispatch(changeStatusLoaderAC({status:"succeeded"}))
           return { todolistId, tasks: res.data.items }
         } catch (error) {
           return thunkAPI.rejectWithValue(null)
